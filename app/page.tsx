@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
-import { usePlayerId } from "../hooks/usePlayerId";
+import { usePlayerId } from "@/hooks/usePlayerId";
 
 export default function LandingPage() {
   const router = useRouter();

@@ -2,9 +2,9 @@
 
 import { useGame } from "./GameProvider";
 import { useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
-import { hasPlayableMove } from "../convex/gameLogic";
-import { useSound } from "../hooks/useSound";
+import { api } from "@/convex/_generated/api";
+import { hasPlayableMove } from "@/convex/gameLogic";
+import { useSound } from "@/hooks/useSound";
 
 export function ActionBar() {
     const { session, roundState, myHand, playerId, playerName } = useGame();

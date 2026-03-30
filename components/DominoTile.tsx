@@ -1,6 +1,6 @@
 "use client";
 
-import React, from "react";
+import React from "react";
 
 type DominoTileProps = {
   tile: { high: number; low: number } | null;

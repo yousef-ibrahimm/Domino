@@ -2,7 +2,7 @@
 
 import { useGame } from "./GameProvider";
 import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "../convex/_generated/api";
 
 export function Scoreboard() {
     const { session, roundState } = useGame();

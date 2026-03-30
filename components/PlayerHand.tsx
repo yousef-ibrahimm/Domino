@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useGame } from "./GameProvider";
 import { DominoTile } from "./DominoTile";
 import { useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "../convex/_generated/api";
 import { useSound } from "../hooks/useSound";
 
 function tileMatchesEnd(tile: {high: number, low: number}, endValue: number) {

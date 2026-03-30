@@ -2,8 +2,8 @@
 
 import { createContext, useContext, ReactNode, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { usePlayerId } from "../../hooks/usePlayerId";
+import { api } from "../convex/_generated/api";
+import { usePlayerId } from "../hooks/usePlayerId";
 import { useParams, useRouter } from "next/navigation";
 
 type GameContextType = {

@@ -46,12 +46,6 @@ export const startRound = internalMutation({
     });
 
     await ctx.db.patch(args.sessionId, { currentRoundId: roundId });
-
-    // Start 15s turn timeout
-    await ctx.scheduler.runAfter(15000, internal.mutations.rounds.autoPass, {
-      roundId,
-      expectedTurn: startingSeat,
-    });
   },
 });
 
@@ -121,6 +115,10 @@ export const playTile = mutation({
     // Validate placement and calculate new open ends
     let newOpenEnds = [...round.openEnds];
     if (round.chain.length === 0) {
+      // Round 1: the first tile must be the double-six
+      if (round.roundNumber === 1 && !(args.tile.high === 6 && args.tile.low === 6)) {
+        throw new Error("MUST_PLAY_DOUBLE_SIX");
+      }
       newOpenEnds = [args.tile.high, args.tile.low];
     } else {
       if (args.end === "left") {
@@ -167,12 +165,6 @@ export const playTile = mutation({
         openEnds: round.openEnds,
         consecutivePasses: round.consecutivePasses,
         currentTurn: round.currentTurn,
-      });
-
-      // Schedule timeout for next player
-      await ctx.scheduler.runAfter(15000, internal.mutations.rounds.autoPass, {
-        roundId: round._id,
-        expectedTurn: round.currentTurn,
       });
     }
   },
@@ -231,11 +223,6 @@ export const passTurn = mutation({
       await ctx.db.patch(round._id, {
         consecutivePasses: round.consecutivePasses,
         currentTurn: round.currentTurn,
-      });
-
-      await ctx.scheduler.runAfter(15000, internal.mutations.rounds.autoPass, {
-        roundId: round._id,
-        expectedTurn: round.currentTurn,
       });
     }
   },

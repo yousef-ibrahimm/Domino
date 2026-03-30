@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useGame } from "./GameProvider";
 import { DominoTile } from "./DominoTile";
 import { useMutation } from "convex/react";
@@ -19,15 +19,29 @@ export function PlayerHand() {
   const [pendingTiles, setPendingTiles] = useState<Set<string>>(new Set());
   const { play: playSfx } = useSound("/place.mp3");
 
+  const isMyTurn = myHand?.canPlay ?? false;
+  const openEnds = roundState?.openEnds || [];
+  const roundNumber = roundState?.roundNumber ?? 0;
+  const chainLength = roundState?.chain?.length ?? 0;
+
+  // Reset selected tile whenever it stops being our turn
+  useEffect(() => {
+    if (!isMyTurn) setSelectedTile(null);
+  }, [isMyTurn]);
+
   if (!myHand || !myHand.tiles) {
     return <div className="h-full flex items-center justify-center text-slate-500">Waiting for tiles...</div>;
   }
 
-  const isMyTurn = myHand.canPlay;
-  const openEnds = roundState.openEnds || [];
-  
   const getPlayableEnds = (tile: {high: number, low: number}) => {
-    if (openEnds.length === 0) return ["left"]; // first tile
+    if (openEnds.length === 0) {
+      // First move of the round
+      if (roundNumber === 1 && chainLength === 0) {
+        // Round 1: only double-six may be played first
+        return (tile.high === 6 && tile.low === 6) ? ["left"] : [];
+      }
+      return ["left"]; // rounds 2+: any tile may start
+    }
     const ends = [];
     if (tileMatchesEnd(tile, openEnds[0])) ends.push("left");
     if (tileMatchesEnd(tile, openEnds[1])) ends.push("right");
